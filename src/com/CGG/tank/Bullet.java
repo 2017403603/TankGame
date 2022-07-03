@@ -1,34 +1,33 @@
 package com.CGG.tank;
 
+import com.CGG.tank.net.Client;
+import com.CGG.tank.net.TankDieMsg;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.UUID;
 
-import com.mashibing.tank.net.Client;
-import com.mashibing.tank.net.TankDieMsg;
-import javax.swing.GroupLayout.Group;
 
 //子弹类
 public class Bullet {
+	//子弹速度
 	private static final int SPEED = 6;
-	
+	//子弹长宽
 	public static int WIDTH = ResourceMgr.bulletD.getWidth();
 
 	public static int HEIGHT = ResourceMgr.bulletD.getHeight();
 
 	private UUID id = UUID.randomUUID();
 	private UUID playerId;
-
+	//子弹矩形
 	Rectangle rect = new Rectangle();
-
+	//坐标方向
 	private int x, y;
-
 	private Dir dir;
-
+	//是否存活
 	private boolean living = true;
-
+	//界面引用
 	TankFrame tf = null;
-
+	//分组
 	private Group group = Group.BAD;
 
 	public Bullet(UUID playerId, int x, int y, Dir dir, Group group, TankFrame tf) {
@@ -38,7 +37,8 @@ public class Bullet {
 		this.dir = dir;
 		this.group = group;
 		this.tf = tf;
-		
+
+		//初始化矩形坐标和长宽
 		rect.x = this.x;
 		rect.y = this.y;
 		rect.width = WIDTH;
@@ -55,7 +55,6 @@ public class Bullet {
 			this.die();
 			Client.INSTANCE.send(new TankDieMsg(this.id, tank.getId()));
 		}
-		
 	}
 
 	public void die() {

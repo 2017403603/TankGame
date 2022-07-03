@@ -1,16 +1,13 @@
 package com.CGG.tank;
 
+import com.CGG.tank.net.BulletNewMsg;
+import com.CGG.tank.net.Client;
+import com.CGG.tank.net.TankJoinMsg;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.Random;
 import java.util.UUID;
-
-import com.mashibing.tank.net.BulletNewMsg;
-import com.mashibing.tank.net.Client;
-import com.mashibing.tank.net.TankJoinMsg;
-import javax.swing.GroupLayout.Group;
-
 
 //坦克类
 public class Tank {
@@ -64,7 +61,8 @@ public class Tank {
 		this.moving = msg.moving;
 		this.group = msg.group;
 		this.id = msg.id;
-		
+
+		//初始化矩阵
 		rect.x = this.x;
 		rect.y = this.y;
 		rect.width = WIDTH;

@@ -1,5 +1,9 @@
 package com.CGG.tank;
 
+import com.CGG.tank.net.Client;
+import com.CGG.tank.net.TankDirChangedMsg;
+import com.CGG.tank.net.TankStartMovingMsg;
+import com.CGG.tank.net.TankStopMsg;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Graphics;
@@ -15,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
-import javax.swing.GroupLayout.Group;
 
 /**
  * @ClassName TankFrame  //类名称
@@ -35,8 +38,10 @@ public class TankFrame extends Frame {
   Random r = new Random();
 
   Tank myTank = new Tank(r.nextInt(GAME_WIDTH), r.nextInt(GAME_HEIGHT), Dir.DOWN, Group.GOOD, this);
+  //子弹集合
   List<Bullet> bullets = new ArrayList<>();
   Map<UUID,Tank> tanks = new HashMap<>();
+  //爆炸集合
   List<Explode> explodes = new ArrayList<>();
 
   //窗口长宽
@@ -172,8 +177,6 @@ public class TankFrame extends Frame {
         default:
           break;
       }
-
-
 
       new Thread(()->new Audio("audio/tank_move.wav").play()).start();
     }
