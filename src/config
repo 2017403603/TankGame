@@ -4,3 +4,8 @@ tankSpeed=5
 bulletSpeed=10
 gameWidth=1080
 gameHeight=720
+#fireStrategy
+goodFS=com.CGG.tank.strategy.FourDirFireStrategy
+badFS=com.CGG.tank.strategy.DefaultFireStrategy
+#colliders
+colliders=com.CGG.tank.cor.BulletTankCollider,com.CGG.tank.cor.TankTankCollider

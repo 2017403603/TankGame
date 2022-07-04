@@ -1,5 +1,5 @@
 
-package com.mashibing.tank;
+package com.CGG.tank;
 
 import java.io.IOException;
 
@@ -7,7 +7,6 @@ import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
-import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.SourceDataLine;
 
 public class Audio {

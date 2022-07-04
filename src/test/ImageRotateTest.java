@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.mashibing.tank.ResourceMgr;
+import com.CGG.tank.ResourceMgr;
 
 class ImageRotateTest {
 
