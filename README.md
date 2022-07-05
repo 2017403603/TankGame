@@ -1,5 +1,10 @@
 # 坦克大战游戏开发设计模式总结
 
+github地址：
+
++ [https://github.com/2017403603/TankGame_Simple1.0.git](https://github.com/2017403603/TankGame_Simple1.0.git)
++ [https://github.com/2017403603/TankGame.git](https://github.com/2017403603/TankGame.git)
+
 ## 1. 遇到的问题
 
 1. 如何定义主战坦克的方向？**使用Enum枚举类定义上下左右四个方向，（枚举类本身也是一个饿汉式单例模式）**
@@ -68,7 +73,7 @@
 
 ## 3. 工厂设计模式
 
-1. **将爆炸类和子弹类各自抽象出一个基类，可以定制不同的爆炸类产生不同的爆炸效果，也可以定制不同的子弹类型** ，在需要对应的类型时，直接使用工厂类生成，也可以将坦克抽象出一个基类，可以使用工厂类生产不同类型的坦克。
+1. **将爆炸类和子弹类各自抽象出一个基类，可以定制不同的爆炸类产生不同的爆炸效果，也可以定制不同的子弹类型** ，在需要对应的类型时，直接使用工厂类生成，也可以将坦克抽象出一个基类，可以使用工厂类生产不同类型的坦克，在生产过程中不用考虑创建过程，只需看到结果。
 
 ## 4. 中介者模式
 
@@ -212,5 +217,122 @@ public class GameModel {
 }
 ```
 
+## 5. 责任链模式
 
+1. 在判断类与类之间碰撞检测时，此时我们不知道类是子弹还是坦克还是墙，定义一个Collider接口，分别定义不同的类实现判断碰撞的方法，如BulletTankCollider类负责子弹和坦克的碰撞检测，TankTankCollider类负责坦克和坦克的碰撞检测。
 
+2. Collider接口：
+
+   ```java
+   public interface Collider {
+    boolean collide(GameObject o1, GameObject o2);
+   }
+   ```
+
+3. BulletTankCollider类:
+
+   ```java
+   public class BulletTankCollider implements Collider {
+   
+    @Override
+    public boolean collide(GameObject o1, GameObject o2) {
+     if(o1 instanceof Bullet && o2 instanceof Tank) {
+      Bullet b = (Bullet)o1;
+      Tank t = (Tank)o2;
+      //TODO copy code from method collideWith
+      if(b.group == t.getGroup()) return true;
+      
+      if(b.rect.intersects(t.rect)) {
+       t.die();
+       b.die();
+       int eX = t.getX() + Tank.WIDTH/2 - Explode.WIDTH/2;
+       int eY = t.getY() + Tank.HEIGHT/2 - Explode.HEIGHT/2;
+       new Explode(eX, eY);
+       return false;
+      }
+      
+     } else if (o1 instanceof Tank && o2 instanceof Bullet) {
+      return collide(o2, o1);
+     } 
+     
+     return true;
+     
+    }
+   
+   }
+   ```
+
+4. TankTankCollider类：
+
+   ```java
+   public class TankTankCollider implements Collider {
+   
+    @Override
+    public boolean collide(GameObject o1, GameObject o2) {
+     if(o1 instanceof Tank && o2 instanceof Tank) {
+      Tank t1 = (Tank)o1;
+      Tank t2 = (Tank)o2;
+      if(t1.getRect().intersects(t2.getRect())) {
+       t1.back();
+       t2.back();
+      }
+      
+     } 
+     
+     return true;
+     
+    }
+   
+   }
+   ```
+
+5. 定义一个责任链ColliderChain类也实现Collider接口，里面集成所有的责任类，定义一个list放BulletTankCollider类、TankTankCollider类等，在初始化的时候写好责任链的顺序，**在需要判断碰撞检测责任的时候，循环遍历所有责任类，并调用对应类的碰撞检测方法**。
+
+   ```java
+   public class ColliderChain implements Collider {
+    private List<Collider> colliders = new LinkedList<>();
+    
+    public ColliderChain() {
+     add(new BulletTankCollider());
+     add(new TankTankCollider());
+     add(new BulletWallCollider());
+     add(new TankWallCollider());
+    }
+    
+    
+    public void add(Collider c) {
+     colliders.add(c);
+    }
+   
+   
+    public boolean collide(GameObject o1, GameObject o2) {
+     for(int i=0; i<colliders.size(); i++) {
+      if(!colliders.get(i).collide(o1, o2)) {
+       return false;
+      }
+     }
+     
+     return true;
+    }
+    
+    
+   }
+   ```
+
+6. 当需要添加坦克和墙碰撞或者子弹与墙(木墙和钢墙)碰撞检测时，只需要实现Collider接口重新定义一个类，并完善类中的碰撞检测方法，最后定义不同物体之间的碰撞检测责任链顺序，**即可完成任意物体之间的碰撞检测，也不需要修改原有代码，只需添加新的类**。
+
+## 6. 装饰器模式
+
+1. 如果我们想在坦克吃了道具后能够发射带尾巴特效的子弹，或者生成带防护罩的坦克，或者说我们希望坦克带一个血条，这时我们可以用到装饰器模式。
+
+   <img src=".\1.png" alt="image-20220705163059518" style="zoom: 50%;" />
+
+2. 实际上就是抽象出一个抽象类，然后继承抽象类实例出一个具体的类，类里面有实现特效子弹和防护罩坦克的方法，而这些方法也是其他已经实现的方法组合而成，许多个方法组和成一个方法，不再需要考虑内部实现细节，只需最终结果生成，在外界看到的就是一个具体生成方法，起到装饰的作用。
+
+## 7. 观察者模式
+
+将我方坦克开火视为一个事件源，其他坦克作为观察者
+
+## 8. 备忘录模式
+
+坦克存盘，并且继续游戏使用到备忘录模式
