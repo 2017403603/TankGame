@@ -325,9 +325,99 @@ public class GameModel {
 
 1. 如果我们想在坦克吃了道具后能够发射带尾巴特效的子弹，或者生成带防护罩的坦克，或者说我们希望坦克带一个血条，这时我们可以用到装饰器模式。
 
-   <img src=".\1.png" alt="image-20220705163059518" style="zoom: 50%;" />
+   <img src="C:\Users\程哥哥\Desktop\临时文件\博客之路\软件设计模式\坦克大战图片\1.png" alt="image-20220705163059518" style="zoom: 50%;" />
 
 2. 实际上就是抽象出一个抽象类，然后继承抽象类实例出一个具体的类，类里面有实现特效子弹和防护罩坦克的方法，而这些方法也是其他已经实现的方法组合而成，许多个方法组和成一个方法，不再需要考虑内部实现细节，只需最终结果生成，在外界看到的就是一个具体生成方法，起到装饰的作用。
+
+3. GODecorator类：
+
+   ```java
+   public abstract class GODecorator extends GameObject {
+    
+    GameObject go;
+    
+    public GODecorator(GameObject go) {
+     
+     this.go = go;
+    }
+   
+    @Override
+    public abstract void paint(Graphics g);
+   
+   }
+   ```
+
+4. RectDecorator类：
+
+   ```java
+   public class RectDecorator extends GODecorator {
+   
+    public RectDecorator(GameObject go) {
+     super(go);
+    }
+   
+    @Override
+    public void paint(Graphics g) {
+     this.x = go.x;
+     this.y = go.y;
+     
+     go.paint(g);
+     
+     Color c = g.getColor();
+     g.setColor(Color.WHITE);
+     g.drawRect(super.go.x, super.go.y, super.go.getWidth()+2, super.go.getHeight()+2);
+     g.setColor(c);
+    }
+    
+    
+    @Override
+    public int getWidth() {
+     return super.go.getWidth();
+    }
+   
+    @Override
+    public int getHeight() {
+     return super.go.getHeight();
+    }
+   
+   }
+   ```
+
+5. TailDecorator类：
+
+   ```java
+   public class TailDecorator extends GODecorator {
+   
+    public TailDecorator(GameObject go) {
+     
+     super(go);
+    }
+   
+    @Override
+    public void paint(Graphics g) {
+     this.x = go.x;
+     this.y = go.y;
+     go.paint(g);
+     
+     Color c = g.getColor();
+     g.setColor(Color.WHITE);
+     g.drawLine(go.x, go.y, go.x + getWidth(), go.y + getHeight());
+     g.setColor(c);
+    }
+    
+    
+    @Override
+    public int getWidth() {
+     return super.go.getWidth();
+    }
+   
+    @Override
+    public int getHeight() {
+     return super.go.getHeight();
+    }
+   
+   }
+   ```
 
 ## 7. 观察者模式
 
