@@ -1,4 +1,4 @@
-package com.mashibing.tank;
+package com.CGG.tank;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;

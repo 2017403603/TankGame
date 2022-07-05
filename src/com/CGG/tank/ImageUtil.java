@@ -1,4 +1,4 @@
-package com.mashibing.tank;
+package com.CGG.tank;
 
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
