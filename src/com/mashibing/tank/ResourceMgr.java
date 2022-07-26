@@ -15,7 +15,6 @@ public class ResourceMgr {
 	static {
 		try {
 			goodTankU = ImageIO.read(ResourceMgr.class.getClassLoader().getResourceAsStream("images/GoodTank1.png"));
-//			System.out.println("12121212212");
 			goodTankL = ImageUtil.rotateImage(goodTankU, -90);
 			goodTankR = ImageUtil.rotateImage(goodTankU, 90);
 			goodTankD = ImageUtil.rotateImage(goodTankU, 180);
